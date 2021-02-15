@@ -17,7 +17,6 @@ export default class Todo extends Component {
   handleDelete(index) {
     const newArr = [...this.state.tasks];
     newArr[index] = { ...newArr[index], done: true };
-
     this.setState({ tasks: newArr });
   }
 
@@ -54,7 +53,7 @@ export default class Todo extends Component {
               key={todo.term + idx}
               id={todo.term + idx}
               onClick={() => this.handleDelete(idx)}
-              styles={todo.done ? "color: red" : null}
+              style={todo.done ? { textDecoration: "line-through" } : null}
             >
               {todo.term}
             </li>
