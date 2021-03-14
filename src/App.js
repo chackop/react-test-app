@@ -10,9 +10,9 @@ import Table from "./Table/Table";
 function App() {
   return (
     <div className="App">
-      <Todo />
+      {/* <Todo /> */}
+      <Table />
       <header className="App-header">
-        {/* <Table /> */}
         {/* <LikeDislike /> */}
         {/* <GetName /> */}
         {/* {console.log(React.createElement("span", null))} */}

@@ -3,13 +3,19 @@ import React, { useState, useEffect } from "react";
 const USERS_URL = "https://example.com/api/users";
 
 export default function Table() {
-  const [tableData, setTableData] = useState(null);
+  const [tableData, setTableData] = useState([]);
   const [pageVal, setPageVal] = useState(0);
+  const [count, setCount] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await fetch(USERS_URL + "?page=" + pageVal);
-      setTableData(data);
+      setTableData([]);
+      const response = await fetch(USERS_URL + "?page=" + pageVal);
+      const data = await response.json();
+      const calcCount =
+        Math.round(data.count / 10) === 0 ? 1 : Math.round(data.count / 10);
+      setCount(calcCount);
+      setTableData(data.results);
     };
 
     fetchData();
@@ -26,7 +32,7 @@ export default function Table() {
           </tr>
         </thead>
         <tbody>
-          {tableData &&
+          {tableData.length > 0 &&
             tableData.map((titem, idx) => (
               <tr key={idx}>
                 <th>{titem.id}</th>
@@ -40,27 +46,28 @@ export default function Table() {
         <button
           className="first-page-btn"
           onClick={() => setPageVal(0)}
-          disabled={!tableData}
+          disabled={tableData.length === 0 || pageVal === 0 || count === 1}
         >
           first
         </button>
         <button
           className="previous-page-btn"
-          disabled={!tableData || pageVal === 0}
-          onClick={(pageVal) => setPageVal(pageVal - 1)}
+          onClick={() => setPageVal((prevPageVal) => prevPageVal - 1)}
+          disabled={tableData.length === 0 || pageVal === 0 || count === 1}
         >
           previous
         </button>
         <button
           className="next-page-btn"
-          disabled={!tableData || pageVal === 10}
+          onClick={() => setPageVal((prevPageVal) => prevPageVal + 1)}
+          disabled={tableData.length === 0 || pageVal === count || count === 1}
         >
           next
         </button>
         <button
           className="last-page-btn"
-          onClick={(pageVal) => setPageVal(pageVal + 1)}
-          disabled={!tableData}
+          onClick={() => setPageVal(count)}
+          disabled={tableData.length === 0 || pageVal === count}
         >
           last
         </button>
